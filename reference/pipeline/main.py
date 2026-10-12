@@ -74,7 +74,7 @@ def parse_args():
         "--initial-measure-number",
         type=int,
         default=1,
-        help="Measure number of the first bar or long rest on this page (default: 1)",
+        help="Number given to the first bar on this page, or at which a leading long rest starts (default: 1)",
     )
 
     return parser.parse_args()
@@ -105,7 +105,10 @@ def serialize_detections(annotated_lines):
 
     Each detection has a class, pixel-space bounding box (x/y are the
     center; width/height are its size), and measure_number. Long rests
-    additionally have measures_spanned as an integer, including OCR fallback.
+    additionally have measures_spanned as an integer, including
+    the fallback, and measures_spanned_confident (bool): False when no
+    usable number was read or its confidence was low, so the number is a
+    guess the user should check.
     """
     return [
         [
@@ -116,7 +119,9 @@ def serialize_detections(annotated_lines):
                 "width": entry["detection"]["width"],
                 "height": entry["detection"]["height"],
                 "measure_number": entry["measure_number"],
-                **({"measures_spanned": entry["measures_spanned"]}
+                **({"measures_spanned": entry["measures_spanned"],
+                    "measures_spanned_confident":
+                        algorithm2.duration_is_confident(entry["detection"])}
                    if "measures_spanned" in entry else {}),
             }
             for entry in line
@@ -128,8 +133,10 @@ def serialize_detections(annotated_lines):
 def run_pipeline(image_path, api_key, initial_measure_number=1):
     """Return top-to-bottom staff lines of left-to-right JSON-ready detections.
 
-    initial_measure_number labels the first bar or long rest, so a new
-    page can start at the same measure number where the previous page ended.
+    `initial_measure_number` is the number given to the page's first bar, or
+    the number a leading long rest starts at. The caller chooses it; the
+    Chronocounter app sends a provisional value and renumbers locally (see
+    its SPEC section 4).
     This function has no output-file side effects; a future API handler can
     return its result directly as JSON. image_path is a local image file.
     """

@@ -24,6 +24,9 @@ import random
 import cv2
 
 
+LONG_REST_CLASSES = ('long rest', 'long rest bottom')
+
+
 def perp_distance(pt, p1, p2):
     """Perpendicular distance from `pt` to the infinite line through p1, p2."""
     (x0, y0), (x1, y1), (x2, y2) = pt, p1, p2
@@ -201,9 +204,10 @@ def annotate_measure_numbers(lines, rest_duration_fn, initial_measure_number=1):
       - anything else is tagged with the current measure number but does
         not advance the counter.
 
-    initial_measure_number labels the first bar or long rest on this page,
-    including a bar that repeats the final measure number of a prior page.
-    It defaults to 1 for a standalone page.
+    `initial_measure_number` is the number given to the page's first bar, or
+    the number a leading long rest starts at. The caller chooses it; the
+    Chronocounter app sends a provisional value and renumbers locally (see
+    its SPEC section 4).
 
     Returns the same array-of-arrays shape, with each pred dict replaced by
     {"class": ..., "measure_number": ..., "detection": pred_dict}.
@@ -256,22 +260,39 @@ def to_label_strings(lines, rest_duration_fn):
     return output
 
 
+def end_measure(entry):
+    """Measure number in force immediately AFTER this detection.
+    A long rest is stamped with the measure it STARTS at, so add the
+    measures it spans; anything else already carries the right number."""
+    n = entry.get('measures_spanned')
+    if entry['class'] in LONG_REST_CLASSES and n:
+        return entry['measure_number'] + n
+    return entry['measure_number']
+
+
 def draw_measure_numbers(image, annotated_lines, font=cv2.FONT_HERSHEY_SIMPLEX,
                           font_scale=0.8, color=(0, 0, 0), thickness=2, gap=15):
-    """Draw each line's preceding measure number near the image's left
-    edge, vertically aligned with that line.  Except on the first line,
-    the displayed number is taken from the rightmost detection of the
-    preceding line.  Mutates `image` in place and also returns it."""
-    previous_rightmost_measure_num = None
+    """Draw each line's starting measure number near the image's left
+    edge, vertically aligned with that line. On the first line the
+    number is the first detection's number minus 1, unless that
+    detection is a long rest (then its own number). On every later
+    line it is end_measure() of the rightmost detection of the
+    preceding line (start + span if that detection is a long rest).
+    Mutates `image` in place and also returns it."""
+    previous_end_measure_num = None
     for line in annotated_lines:
         if not line:
             continue
 
         detections = [entry["detection"] for entry in line]
         text_y = int(sum(d["y"] for d in detections) / len(detections))
-        measure_num = (previous_rightmost_measure_num
-                       if previous_rightmost_measure_num is not None
-                       else line[0]["measure_number"])
+        first = line[0]
+        if previous_end_measure_num is not None:
+            measure_num = previous_end_measure_num
+        elif first['class'] in LONG_REST_CLASSES:
+            measure_num = first['measure_number']
+        else:
+            measure_num = first['measure_number'] - 1
 
         text = str(measure_num)
         (_, text_h), _ = cv2.getTextSize(text, font, font_scale, thickness)
@@ -280,8 +301,8 @@ def draw_measure_numbers(image, annotated_lines, font=cv2.FONT_HERSHEY_SIMPLEX,
         cv2.putText(image, text, (text_x, text_y + text_h // 2),
                     font, font_scale, color, thickness, cv2.LINE_AA)
 
-        previous_rightmost_measure_num = max(
-            line, key=lambda entry: entry["detection"]["x"]
-        )["measure_number"]
+        previous_end_measure_num = end_measure(
+            max(line, key=lambda entry: entry["detection"]["x"])
+        )
 
     return image

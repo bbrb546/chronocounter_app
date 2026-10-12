@@ -18,6 +18,13 @@ import cv2
 import roboflow_runner
 
 
+# A long rest's number counts as "confidently read" when digits were found,
+# they form a number of at least 1, and the mean per-digit confidence is at
+# least this. 0.6 is a starting guess: tune it after looking at real
+# measure_count_confidence values.
+CONFIDENT_MIN = 0.6
+
+
 def crop_box(image, pred, top, pad_frac=0.15):
     """Crop a prediction's bounding box out of `image`, padded slightly
     (digits sometimes sit right at the box edge), then cut down to just
@@ -120,10 +127,21 @@ def duration_from_ocr(pred, default=1):
     """rest_duration_fn for algorithm1.annotate_measure_numbers() /
     to_label_strings(). Reads the digit-detection result stashed by
     ocr_annotate_long_rests(), falling back to `default` if nothing
-    confident came back -- this keeps a single bad reading from crashing
-    the whole measure count, at the cost of that rest's count possibly
-    being wrong."""
+    confident came back (or the reading was below 1) -- this keeps a
+    single bad reading from crashing or stalling the measure count, at
+    the cost of that rest's count possibly being wrong."""
     digits = pred.get("measure_count")
     if not digits:
         return default
-    return int(digits)
+    n = int(digits)
+    return n if n >= 1 else default
+
+
+def duration_is_confident(pred):
+    """True when the rest's number came from a real, confident reading
+    rather than the fallback default. The app marks long rests where this
+    is False so the user can check them."""
+    digits = pred.get("measure_count")
+    if not digits or int(digits) < 1:
+        return False
+    return pred.get("measure_count_confidence", 0.0) >= CONFIDENT_MIN
