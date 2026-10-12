@@ -89,7 +89,8 @@
       "width": 188.0,
       "height": 111.0,
       "measure_number": 11,
-      "measures_spanned": 14
+      "measures_spanned": 14,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -106,7 +107,8 @@
       "width": 115.0,
       "height": 113.0,
       "measure_number": 25,
-      "measures_spanned": 4
+      "measures_spanned": 4,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -123,7 +125,8 @@
       "width": 314.0,
       "height": 109.0,
       "measure_number": 29,
-      "measures_spanned": 4
+      "measures_spanned": 4,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -140,7 +143,8 @@
       "width": 293.0,
       "height": 108.0,
       "measure_number": 33,
-      "measures_spanned": 19
+      "measures_spanned": 19,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -157,7 +161,8 @@
       "width": 123.0,
       "height": 111.0,
       "measure_number": 52,
-      "measures_spanned": 4
+      "measures_spanned": 4,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -200,7 +205,8 @@
       "width": 146.0,
       "height": 108.0,
       "measure_number": 59,
-      "measures_spanned": 3
+      "measures_spanned": 3,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -241,7 +247,8 @@
       "width": 127.0,
       "height": 113.0,
       "measure_number": 65,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -258,7 +265,8 @@
       "width": 140.0,
       "height": 110.0,
       "measure_number": 66,
-      "measures_spanned": 5
+      "measures_spanned": 5,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -275,7 +283,8 @@
       "width": 138.0,
       "height": 106.0,
       "measure_number": 71,
-      "measures_spanned": 2
+      "measures_spanned": 2,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -316,7 +325,8 @@
       "width": 149.0,
       "height": 102.0,
       "measure_number": 76,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -359,7 +369,8 @@
       "width": 117.0,
       "height": 107.0,
       "measure_number": 80,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -376,7 +387,8 @@
       "width": 117.0,
       "height": 109.0,
       "measure_number": 81,
-      "measures_spanned": 2
+      "measures_spanned": 2,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -401,7 +413,8 @@
       "width": 121.0,
       "height": 106.0,
       "measure_number": 84,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -444,7 +457,8 @@
       "width": 120.0,
       "height": 104.0,
       "measure_number": 88,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -469,7 +483,8 @@
       "width": 126.0,
       "height": 108.0,
       "measure_number": 90,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -494,7 +509,8 @@
       "width": 120.0,
       "height": 104.0,
       "measure_number": 92,
-      "measures_spanned": 6
+      "measures_spanned": 6,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -559,7 +575,8 @@
       "width": 119.0,
       "height": 103.0,
       "measure_number": 104,
-      "measures_spanned": 2
+      "measures_spanned": 2,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -636,7 +653,8 @@
       "width": 109.0,
       "height": 114.0,
       "measure_number": 113,
-      "measures_spanned": 4
+      "measures_spanned": 4,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -695,7 +713,8 @@
       "width": 140.0,
       "height": 113.0,
       "measure_number": 122,
-      "measures_spanned": 4
+      "measures_spanned": 4,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -712,7 +731,8 @@
       "width": 233.0,
       "height": 67.0,
       "measure_number": 126,
-      "measures_spanned": 11
+      "measures_spanned": 11,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -787,7 +807,8 @@
       "width": 121.0,
       "height": 110.0,
       "measure_number": 144,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -828,7 +849,8 @@
       "width": 145.0,
       "height": 109.0,
       "measure_number": 148,
-      "measures_spanned": 6
+      "measures_spanned": 6,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -845,7 +867,8 @@
       "width": 196.0,
       "height": 119.0,
       "measure_number": 154,
-      "measures_spanned": 16
+      "measures_spanned": 16,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -904,7 +927,8 @@
       "width": 120.0,
       "height": 107.0,
       "measure_number": 175,
-      "measures_spanned": 3
+      "measures_spanned": 3,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -987,7 +1011,8 @@
       "width": 117.0,
       "height": 116.0,
       "measure_number": 186,
-      "measures_spanned": 4
+      "measures_spanned": 4,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -1028,7 +1053,8 @@
       "width": 120.0,
       "height": 106.0,
       "measure_number": 193,
-      "measures_spanned": 2
+      "measures_spanned": 2,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -1045,7 +1071,8 @@
       "width": 119.0,
       "height": 106.0,
       "measure_number": 195,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -1062,7 +1089,8 @@
       "width": 113.0,
       "height": 106.0,
       "measure_number": 196,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -1097,7 +1125,8 @@
       "width": 327.0,
       "height": 118.0,
       "measure_number": 199,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -1114,7 +1143,8 @@
       "width": 203.0,
       "height": 115.0,
       "measure_number": 200,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -1131,7 +1161,8 @@
       "width": 127.0,
       "height": 111.0,
       "measure_number": 201,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
@@ -1148,7 +1179,8 @@
       "width": 285.0,
       "height": 116.0,
       "measure_number": 202,
-      "measures_spanned": 1
+      "measures_spanned": 1,
+      "measures_spanned_confident": true
     },
     {
       "class": "bar",
