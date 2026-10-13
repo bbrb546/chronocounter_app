@@ -60,3 +60,14 @@ const TEXT_PAIRS: Dictionary = {
 	"danger/surface": [DANGER, SURFACE],
 	"success/surface": [SUCCESS, SURFACE],
 }
+
+# Capture screen.
+const SHUTTER_SIZE: int = 216
+const THUMBNAIL_SIZE: int = 144
+const THUMBNAIL_LONG_SIDE: int = 256
+const CAPTURE_PANEL_FRACTION: float = 0.45
+const CAMERA_SURFACE: Color = Color(0.10196, 0.10980, 0.12941, 0.85)
+const CAMERA_TOP_SURFACE: Color = Color(0.10196, 0.10980, 0.12941, 0.6)
+const CAPTURE_WHITE: Color = Color.WHITE
+const FLASH_DURATION: float = 0.08
+const PHOTO_PREVIEW_HEIGHT: int = 480

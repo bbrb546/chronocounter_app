@@ -68,7 +68,9 @@ func _handle_back() -> void:
 	var scene: Node = get_tree().current_scene
 	if scene == null:
 		return
-	if scene.scene_file_path == ROUTES["main_menu"]:
+	if scene.has_method("request_back"):
+		scene.request_back()
+	elif scene.scene_file_path == ROUTES["main_menu"]:
 		get_tree().quit()
 	else:
 		goto("main_menu")

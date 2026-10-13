@@ -69,6 +69,21 @@ func _run() -> void:
 	var snackbar: Control = load("res://ui/Snackbar/Snackbar.tscn").instantiate()
 	screen.add_child(snackbar)
 	snackbar.action_pressed.connect(func() -> void: _actions += 1)
+	snackbar.show_message("Settings saved.", "", DesignTokens.SETTINGS_SAVED_DURATION)
+	var first_snackbar_size: Vector2 = snackbar.size
+	_check("First snackbar text has a drawable rectangle immediately", snackbar._label.text == "Settings saved." and snackbar._label.size.x > 0 and snackbar._label.size.y > 0 and snackbar.get_rect().encloses(Rect2(snackbar.position + snackbar._row.position + snackbar._label.position, snackbar._label.size)))
+	_check("First snackbar is compact before first frame", first_snackbar_size.y < screen.get_viewport_rect().size.y / 2.0 and snackbar.mouse_filter == Control.MOUSE_FILTER_IGNORE)
+	await process_frame
+	await process_frame
+	_check("First snackbar label is visible after layout", snackbar._label.is_visible_in_tree() and snackbar._label.size.y > 0)
+	_check("First snackbar size stays stable after layout", snackbar.size == first_snackbar_size)
+	var taps_before: int = _outside_taps
+	await _tap(outside.get_global_rect().get_center())
+	_check("First snackbar allows other menu actions", _outside_taps == taps_before + 1)
+	snackbar.dismiss()
+	snackbar.show_message("Settings saved.")
+	_check("Repeated snackbar matches first size", snackbar.size == first_snackbar_size)
+	snackbar.dismiss()
 	snackbar.show_message("Removed.", "Undo")
 	await process_frame
 	await process_frame
