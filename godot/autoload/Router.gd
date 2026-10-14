@@ -3,6 +3,7 @@ extends Node
 const ROUTES: Dictionary = {
 	"main_menu": "res://scenes/main_menu/main_menu.tscn",
 	"capture": "res://scenes/capture/capture.tscn",
+	"processing": "res://scenes/processing/processing.tscn",
 	"results": "res://scenes/results/results.tscn",
 }
 

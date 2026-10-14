@@ -350,12 +350,10 @@ func _retake_selected() -> void:
 	_refresh()
 
 func _process_pages() -> void:
-	if OS.is_debug_build():
-		for index: int in AppState.pages.size():
-			var page: PhotoPage = AppState.pages[index]
-			print("Process page %d: %s, %dx%d, %d bytes, pickup=%s" % [index + 1, page.mime, page.width, page.height, page.bytes.size(), AppState.pickup_first_bar])
-	_message.text = "Pages are ready. Processing will be connected next."
-	_refresh()
+	if _busy or AppState.pages.is_empty():
+		return
+	camera.stop_preview()
+	Router.goto("processing")
 
 func request_back() -> void:
 	if _busy:

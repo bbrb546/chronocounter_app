@@ -7,10 +7,12 @@ signal cancelled
 @export var title: String = "Delete photo?"
 @export var message: String = "This removes the photo from this session."
 @export var confirm_text: String = "Delete"
+@export var cancel_text: String = "Cancel"
 @export var danger: bool = false
 var _title_label: Label
 var _message_label: Label
 var _confirm: PrimaryButton
+var _cancel: SecondaryButton
 var _accepted: bool = false
 
 func _ready() -> void:
@@ -30,10 +32,9 @@ func _ready() -> void:
 		confirmed.emit()
 		close())
 	content.add_child(_confirm)
-	var cancel: SecondaryButton = SecondaryButton.new()
-	cancel.text = "Cancel"
-	cancel.pressed.connect(close)
-	content.add_child(cancel)
+	_cancel = SecondaryButton.new()
+	_cancel.pressed.connect(close)
+	content.add_child(_cancel)
 	closed.connect(func() -> void:
 		if not _accepted:
 			cancelled.emit())
@@ -43,5 +44,6 @@ func open() -> void:
 	_title_label.text = title
 	_message_label.text = message
 	_confirm.text = confirm_text
+	_cancel.text = cancel_text
 	_confirm.theme_type_variation = "DangerButton" if danger else "PrimaryButton"
 	super.open()

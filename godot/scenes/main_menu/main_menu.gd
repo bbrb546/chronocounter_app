@@ -7,6 +7,7 @@ var mock_switch: CheckButton
 var haptics_switch: CheckButton
 var status_label: Label
 var report_label: Label
+var test_button: SecondaryButton
 
 func _ready() -> void:
 	super._ready()
@@ -36,6 +37,10 @@ func _ready() -> void:
 	haptics_switch.text = "Haptics"
 	haptics_switch.custom_minimum_size = Vector2.ONE * DesignTokens.HIT_SIZE
 	settings_sheet.content.add_child(haptics_switch)
+	test_button = SecondaryButton.new()
+	test_button.text = "Test connection"
+	test_button.pressed.connect(_test_connection)
+	settings_sheet.content.add_child(test_button)
 	var save: PrimaryButton = PrimaryButton.new()
 	save.text = "Save"
 	save.pressed.connect(_on_save_pressed)
@@ -63,6 +68,7 @@ func _on_settings_pressed() -> void:
 	mock_switch.button_pressed = Settings.mock_mode
 	haptics_switch.button_pressed = Settings.haptics_enabled
 	status_label.text = ""
+	status_label.add_theme_color_override("font_color", DesignTokens.DANGER)
 	status_label.hide()
 	if OS.is_debug_build():
 		_update_device_report()
@@ -95,3 +101,14 @@ func _update_device_report() -> void:
 	report_label.text = "Model: %s\nOS: %s\nScreen: %s; DPI: %s\nSafe area: %s" % [
 		OS.get_model_name(), OS.get_version(), DisplayServer.screen_get_size(),
 		DisplayServer.screen_get_dpi(), DisplayServer.get_display_safe_area()]
+
+func _test_connection() -> void:
+	test_button.disabled = true
+	status_label.text = "Testing connection…"
+	status_label.show()
+	var response: Dictionary = await ApiClient.test_connection(url_edit.text, mock_switch.button_pressed)
+	if not is_inside_tree():
+		return
+	test_button.disabled = false
+	status_label.text = "OK (mock mode)." if response.ok and mock_switch.button_pressed else ("OK. Server is reachable." if response.ok else str(response.error))
+	status_label.add_theme_color_override("font_color", DesignTokens.SUCCESS if response.ok else DesignTokens.DANGER)
