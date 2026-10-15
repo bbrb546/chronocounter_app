@@ -13,11 +13,24 @@ var x: float = 0.0
 var y: float = 0.0
 var w: float = 0.0
 var h: float = 0.0
-var measures_spanned: int = 0
+var _batch_change: bool = false
+var measures_spanned: int = 0:
+	set(value):
+		if measures_spanned == value:
+			return
+		measures_spanned = value
+		if not _batch_change:
+			changed.emit()
 var measure_number: int = 0
 var server_measure_number: int = 0
 var edited: bool = false
-var needs_check: bool = false
+var needs_check: bool = false:
+	set(value):
+		if needs_check == value:
+			return
+		needs_check = value
+		if not _batch_change:
+			changed.emit()
 
 
 static func from_json(dict: Dictionary) -> DetectionData:
@@ -51,7 +64,9 @@ func end_measure() -> int:
 func apply_length(length: int) -> void:
 	if not is_long_rest():
 		return
+	_batch_change = true
 	measures_spanned = clampi(length, MIN_REST_LENGTH, MAX_REST_LENGTH)
 	edited = true
 	needs_check = false
+	_batch_change = false
 	changed.emit()

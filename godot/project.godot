@@ -23,6 +23,7 @@ AppState="*res://autoload/AppState.gd"
 ApiClient="*res://autoload/ApiClient.gd"
 Router="*res://autoload/Router.gd"
 Haptics="*res://autoload/Haptics.gd"
+GestureState="*res://autoload/GestureState.gd"
 
 [display]
 

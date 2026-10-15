@@ -71,3 +71,20 @@ const CAMERA_TOP_SURFACE: Color = Color(0.10196, 0.10980, 0.12941, 0.6)
 const CAPTURE_WHITE: Color = Color.WHITE
 const FLASH_DURATION: float = 0.08
 const PHOTO_PREVIEW_HEIGHT: int = 480
+
+# Detection overlays (screen pixels, compensated for viewer zoom).
+const MARKER_FILL_ALPHA: float = 0.25
+const MARKER_OUTLINE: float = 2.0
+const MARKER_SELECTION: float = 6.0
+const MARKER_TEXT_SIZE: int = 30
+const MARKER_PICK_RADIUS: float = 96.0
+const MARKER_TAP_SLOP: float = 12.0
+const MARKER_TAP_MS: int = 400
+
+# Results viewer.
+const RESULTS_ARROW_ALPHA: float = 0.6
+const RESULTS_IDLE_ALPHA: float = 0.3
+const RESULTS_IDLE_SECONDS: float = 2.0
+const RESULTS_SPINNER_DELAY_MS: int = 100
+
+const RESULTS_TOP_SURFACE: Color = Color(0.14510, 0.15686, 0.18824, 0.85)

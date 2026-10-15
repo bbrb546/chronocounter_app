@@ -115,3 +115,23 @@ Run `godot --headless --path godot -s res://tests/run_all.gd` for import/encodin
 The settings bridge follows [Godot's Android API integration documentation](https://docs.godotengine.org/en/stable/tutorials/platform/android/javaclasswrapper_and_androidruntimeplugin.html). No export presets, Android templates, manifests, SDK/JDK configuration or plugin files were changed.
 
 Snackbar geometry is measured from the message font at its final width before the first display; it does not depend on initial container layout caches. The label receives its rectangle directly, clearing the initial zero-width text layout before restoring the message so the first display contains readable text. The message and background allow pointer input to pass through, while an optional action button remains interactive. Regression tests cover first/repeated size and menu input while the first snackbar is visible.
+
+## Detection markers
+
+Instantiate `res://scenes/detection_marker/detection_marker.tscn` once per detection under the image-space `Node2D`, then call `setup(data)`. The marker derives its box and badge from `DetectionData`, ignores pointer input, and emits `tapped(marker)` when its `tap()` method is called. `set_selected(bool)` controls the amber selection border; `show_labels` defaults to false. `refresh()` rereads all fields, and `data.changed` calls it automatically. Long-rest duration badges sit at the bottom box edge for `long rest` and the top edge for `long rest bottom`, keeping the photographed duration visible. Direct assignments to `measures_spanned` and `needs_check` emit `changed`; other direct field changes should be followed by `data.changed.emit()` or `marker.refresh()`.
+
+Add one `MarkerPicker` per page and assign its `marker_parent` to that image-space parent. When the viewer changes zoom, call `set_view_zoom(z)` on the picker and each marker while scaling the parent to `Vector2.ONE * z`. The picker converts viewport taps through the parent's canvas transform, chooses the nearest visible box within 96 screen px, and breaks distance ties by box area. It calls `tap()`; the viewer handles selection through the marker signal. `GestureState.multitouch_active` blocks taps, including a gesture that becomes multitouch between press and release.
+
+Run the interactive sandbox:
+
+```sh
+godot --path godot res://tests/marker_sandbox.tscn
+```
+
+It includes all five classes, both rest badges, a 6 px bar and bars 40 image px apart. Use the zoom slider, label switch, rest-length button and question-mark button to inspect outlines, selection and live data updates on white paper. Desktop clicks use the same touch recognizer. Automated marker tests cover picking, data refresh and gesture rejection; screen appearance and physical touch behaviour still need device verification.
+
+## Results viewer
+
+Results displays one decoded photo texture at a time in image-pixel world coordinates. Page changes release the previous texture and markers before decoding on a worker; a spinner appears after 100 ms. Failed or empty detection pages remain navigable and show plain empty-state copy. Decode failures show “Could not load this photo”. The page index survives popup navigation in AppState.
+
+The Camera2D fits the photo inside the space below the top bar and above the bottom controls, with a 24 px side margin and at least 24 px clearance from the bar and controls. It centres the image horizontally and vertically between the top bar and bottom controls, constrains height on shorter viewports, and forwards zoom to markers and their picker. The Results top bar uses a slightly lighter translucent charcoal surface. Labels persist while paging. Page arrows sit inside the 96 px gesture margins, with dark circles at 60% opacity that dim to 30% after two seconds without touch. Menu and Reset view are placeholders for later prompts. Device checks must verify safe areas, arrow appearance and decode responsiveness on the Pixel 6a.
