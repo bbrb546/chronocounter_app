@@ -1,6 +1,8 @@
 class_name MarkerPicker
 extends Node
 
+signal empty_tapped
+
 # Assign the image-space parent containing the page's markers.
 @export var marker_parent: Node2D
 var view_zoom: float = 1.0
@@ -71,3 +73,5 @@ func _finish(point: Vector2, cancelled: bool) -> void:
 		var marker: DetectionMarker = pick(world)
 		if marker != null:
 			marker.tap()
+		else:
+			empty_tapped.emit()

@@ -82,9 +82,19 @@ const MARKER_TAP_SLOP: float = 12.0
 const MARKER_TAP_MS: int = 400
 
 # Results viewer.
+const LINE_NUMBER_LEFT: float = 15.0
+const LINE_NUMBER_HEIGHT_RATIO: float = 0.7
+const LINE_NUMBER_MIN_SIZE: int = 20
+const LINE_NUMBER_MAX_SIZE: int = 72
+const LINE_NUMBER_HALO: int = 3
 const RESULTS_ARROW_ALPHA: float = 0.6
 const RESULTS_IDLE_ALPHA: float = 0.3
 const RESULTS_IDLE_SECONDS: float = 2.0
 const RESULTS_SPINNER_DELAY_MS: int = 100
 
 const RESULTS_TOP_SURFACE: Color = Color(0.14510, 0.15686, 0.18824, 0.85)
+
+# Camera alignment guides.
+const CAPTURE_GUIDE_COUNT: int = 6
+const CAPTURE_GUIDE_WIDTH: float = 2.0
+const CAPTURE_GUIDE_COLOR: Color = Color(1, 1, 1, 0.45)

@@ -3,6 +3,7 @@ extends Control
 const MAX_PAGES: int = 30
 const COMPONENTS: String = "res://ui/%s/%s.tscn"
 
+var _guides: Node2D
 var camera: CameraService
 var _panel: PanelContainer
 var _top: PanelContainer
@@ -31,12 +32,16 @@ func _component(kind: String) -> Node:
 	return (load(COMPONENTS % [kind, kind]) as PackedScene).instantiate()
 
 func _ready() -> void:
+	_guides = Node2D.new()
+	add_child(_guides)
+	move_child(_guides, $Preview.get_index() + 1)
+	_guides.draw.connect(_draw_guides)
 	_build_ui()
 	camera = CameraService.new()
 	add_child(camera)
 	camera.preview_updated.connect(func(texture: ImageTexture) -> void:
 		$Preview.texture = texture
-		queue_redraw()
+		_guides.queue_redraw()
 		if texture != null:
 			var recovering_permission: bool = _permission.visible
 			_permission.hide()
@@ -184,8 +189,9 @@ func _layout() -> void:
 	_panel.size = Vector2(chrome.size.x, minf(_panel.get_combined_minimum_size().y, size.y * DesignTokens.CAPTURE_PANEL_FRACTION))
 	_panel.position = Vector2(0, chrome.size.y - _panel.size.y)
 	# Show the entire camera frame within the unobscured, safe-area viewport.
-	$Preview.position = chrome.position + $SafeArea.position
-	$Preview.size = Vector2(chrome.size.x, _panel.position.y)
+	var preview_top: float = _top.position.y + _top.size.y + DesignTokens.SPACE_24
+	$Preview.position = chrome.position + $SafeArea.position + Vector2(0, preview_top)
+	$Preview.size = Vector2(chrome.size.x, maxf(0, _panel.position.y - preview_top - DesignTokens.SPACE_24))
 	_caption.position = Vector2(0, _top.size.y + DesignTokens.SPACE_48)
 	_caption.size.x = chrome.size.x
 	_message.position = Vector2(0, _caption.position.y + DesignTokens.SPACE_72)
@@ -195,12 +201,11 @@ func _layout() -> void:
 	_spinner.position = Vector2((chrome.size.x - DesignTokens.ICON_SIZE) / 2, _panel.position.y - DesignTokens.HIT_SIZE - DesignTokens.SPACE_72)
 	_loading.position = Vector2(0, _spinner.position.y + DesignTokens.ICON_SIZE)
 	_loading.size.x = chrome.size.x
-	queue_redraw()
+	_guides.queue_redraw()
 
-func _draw() -> void:
+func _draw_guides() -> void:
 	if not is_instance_valid(_panel):
 		return
-	var chrome: Control = $SafeArea/Chrome
 	var preview: TextureRect = $Preview
 	var image_rect: Rect2 = preview.get_rect()
 	if preview.texture != null:
@@ -208,11 +213,12 @@ func _draw() -> void:
 		var scale: float = minf(preview.size.x / image_size.x, preview.size.y / image_size.y)
 		image_rect.size = image_size * scale
 		image_rect.position = preview.position + (preview.size - image_rect.size) / 2.0
-	var rect: Rect2 = image_rect.grow(-DesignTokens.SPACE_48)
-	for corner: Vector2 in [rect.position, Vector2(rect.end.x, rect.position.y), rect.end, Vector2(rect.position.x, rect.end.y)]:
-		var direction: Vector2 = Vector2(1 if corner.x == rect.position.x else -1, 1 if corner.y == rect.position.y else -1)
-		draw_line(corner, corner + Vector2(direction.x * DesignTokens.SPACE_72, 0), DesignTokens.CAPTURE_WHITE, DesignTokens.ICON_STROKE, true)
-		draw_line(corner, corner + Vector2(0, direction.y * DesignTokens.SPACE_72), DesignTokens.CAPTURE_WHITE, DesignTokens.ICON_STROKE, true)
+	var rect: Rect2 = image_rect
+	if not rect.has_area():
+		return
+	for index: int in range(1, DesignTokens.CAPTURE_GUIDE_COUNT + 1):
+		var y: float = rect.position.y + rect.size.y * index / (DesignTokens.CAPTURE_GUIDE_COUNT + 1.0)
+		_guides.draw_line(Vector2(rect.position.x, y), Vector2(rect.end.x, y), DesignTokens.CAPTURE_GUIDE_COLOR, DesignTokens.CAPTURE_GUIDE_WIDTH, true)
 
 func _refresh() -> void:
 	for child: Node in _strip.get_children():

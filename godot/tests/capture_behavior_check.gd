@@ -20,6 +20,7 @@ func _run() -> void:
 		await process_frame
 		_check("Capture panel fits 45 percent at %d" % height, screen._panel.size.y <= height * DesignTokens.CAPTURE_PANEL_FRACTION and screen._panel.size.y >= screen._panel.get_combined_minimum_size().y)
 		var preview: TextureRect = screen.get_node("Preview")
+		_check("Preview clears top bar at %d" % height, preview.global_position.y >= screen._top.global_position.y + screen._top.size.y + DesignTokens.SPACE_24)
 		_check("Preview fits above controls at %d" % height, preview.get_global_rect().end.y <= screen._panel.global_position.y and preview.global_position.x >= 0 and preview.get_global_rect().end.x <= 1080 and preview.stretch_mode == TextureRect.STRETCH_KEEP_ASPECT_CENTERED)
 		_check("Shutter is 216 px", screen._shutter.size == Vector2.ONE * DesignTokens.SHUTTER_SIZE)
 		_check("Thumbnail strip has gesture margins", screen._strip.global_position.x >= DesignTokens.GESTURE_MARGIN)

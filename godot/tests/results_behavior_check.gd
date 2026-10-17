@@ -22,12 +22,36 @@ func _check() -> void:
 	empty.bytes = page.bytes
 	empty.mime = page.mime
 	state.pages.assign([page, empty])
+	state.pickup_first_bar = true
+	NumberingEngine.number_all_pages(state.pages, true)
 	var screen: Node = load("res://scenes/results/results.tscn").instantiate()
 	root.add_child(screen)
 	while screen._task != -1:
 		await process_frame
 	assert(screen.photo.texture != null)
 	assert(screen.markers.get_child_count() == 1)
+	var overlay: LineNumberOverlay = screen.line_numbers
+	assert(overlay.get_index() > screen.photo.get_index())
+	assert(overlay.get_index() < screen.markers.get_index())
+	assert(overlay._labels.size() == 1 and overlay._labels[0].text == "0")
+	assert(overlay._labels[0].position.x == 15.0 and overlay._labels[0].font_size == 70)
+	var rest: DetectionData = DetectionData.from_json({"class": "long rest", "y": 700, "height": 20, "measures_spanned": 4})
+	var next: DetectionData = DetectionData.from_json({"class": "bar", "y": 900, "height": 200})
+	page.lines = [[], [detection, rest], [], [next]]
+	NumberingEngine.number_all_pages(state.pages, true)
+	state.numbering_changed.emit()
+	assert(overlay._labels.size() == 2 and overlay._labels[1].text == "5")
+	assert(overlay._labels[0].font_size == 42 and overlay._labels[1].font_size == 72)
+	var baseline_offset: float = (overlay._font.get_ascent(42) - overlay._font.get_descent(42)) / 2.0
+	assert(is_equal_approx(overlay._labels[0].position.y - baseline_offset, 600.0))
+	rest.apply_length(8)
+	NumberingEngine.number_all_pages(state.pages, true)
+	state.numbering_changed.emit()
+	assert(overlay._labels[1].text == "9")
+	page.lines[1].remove_at(0)
+	NumberingEngine.number_all_pages(state.pages, true)
+	state.numbering_changed.emit()
+	assert(overlay._labels[0].text == "1" and overlay._labels[0].font_size == 20)
 	assert(screen.left_arrow.disabled and not screen.right_arrow.disabled)
 	assert(screen.camera.zoom.x < screen.get_viewport_rect().size.x / 3024.0)
 	var origin: Vector2 = screen.get_viewport_rect().size / 2.0 - screen.camera.position * screen.camera.zoom
@@ -39,6 +63,7 @@ func _check() -> void:
 	screen.labels.button_pressed = true
 	assert(screen.markers.get_child(0).show_labels)
 	screen.show_page(1)
+	assert(overlay._labels.is_empty())
 	assert(screen.photo.texture == null)
 	assert(screen.markers.get_child_count() == 0)
 	assert(state.current_page_index == 1 and screen.right_arrow.disabled)

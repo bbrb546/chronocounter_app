@@ -78,23 +78,27 @@ func _draw() -> void:
 		draw_rect(box, colour, false, DesignTokens.MARKER_OUTLINE / view_zoom)
 	if data.is_long_rest():
 		var badge_center: Vector2 = Vector2(size.x / 2.0, 0.0 if data.cls == "long rest bottom" else size.y)
-		_draw_pill(badge_text(), badge_center, data.needs_check)
+		_draw_pill(badge_text(), badge_center, data.needs_check, data.edited)
 	if show_labels:
 		var gap: float = DesignTokens.SPACE_24 / view_zoom
 		_draw_pill(data.cls, Vector2(size.x / 2.0, -gap), false)
 		_draw_pill("m%d" % data.measure_number, Vector2(size.x / 2.0, size.y + gap), false)
 
 
-func _draw_pill(text: String, center: Vector2, highlight_question: bool) -> void:
+func _draw_pill(text: String, center: Vector2, highlight_question: bool, edited: bool = false) -> void:
 	var font: Font = get_theme_default_font()
 	var font_size: int = maxi(1, roundi(DesignTokens.MARKER_TEXT_SIZE / view_zoom))
 	var extent: Vector2 = font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 	var padding: Vector2 = Vector2(DesignTokens.SPACE_12, DesignTokens.SPACE_12 / 2.0) / view_zoom
+	if edited:
+		extent.x += DesignTokens.SPACE_24 / view_zoom
 	var rect: Rect2 = Rect2(center - (extent + padding * 2.0) / 2.0, extent + padding * 2.0)
 	var pill: StyleBoxFlat = StyleBoxFlat.new()
 	pill.bg_color = DesignTokens.BG
 	pill.set_corner_radius_all(roundi(rect.size.y / 2.0))
 	draw_style_box(pill, rect)
+	if edited:
+		draw_circle(Vector2(rect.end.x - padding.x, center.y), DesignTokens.ICON_STROKE / view_zoom, DesignTokens.ACCENT)
 	var baseline: Vector2 = Vector2(rect.position.x + padding.x, center.y + (font.get_ascent(font_size) - font.get_descent(font_size)) / 2.0)
 	var prefix: String = text.trim_suffix("?") if highlight_question else text
 	draw_string(font, baseline, prefix, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, DesignTokens.TEXT_PRIMARY)
